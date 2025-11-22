@@ -1,7 +1,3 @@
-git clone https://github.com/junheung/erpnext-dev
-docker-compose up -d
-docker-compose ps
-docker exec -it erpnext-frappe bash
 # ERPNext + Frontend 개발환경 세팅 가이드
 
 이 문서는 본 프로젝트를 Git에서 다운로드 받아 **로컬/개발 환경**을 동일하게 구성하는 방법을 안내합니다.
@@ -14,7 +10,7 @@ docker exec -it erpnext-frappe bash
 
 ## 2. 프로젝트 다운로드
 ```bash
-git clone <YOUR_REPO_URL> erpnext-dev
+git clone https://github.com/junheung/erpnext-dev
 ```
 
 ```env
