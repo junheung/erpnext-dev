@@ -1,4 +1,4 @@
-git clone <repository-url> erpnext-dev
+git clone https://github.com/junheung/erpnext-dev
 docker-compose up -d
 docker-compose ps
 docker exec -it erpnext-frappe bash
