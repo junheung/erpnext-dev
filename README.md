@@ -203,24 +203,6 @@ git commit -m "feat: 새 기능 추가"
 **도움이 필요하신가요?**  
 자세한 내용은 [SETUP_GUIDE.md](./SETUP_GUIDE.md)를 참조하거나 개발팀에 문의하세요.
 
-**마지막 업데이트**: 2025년 11월 22일
-
-
-```
-erpnext-dev/
-├── apps/                    # 애플리케이션 소스 코드
-│   ├── frappe/             # Frappe Framework
-│   └── erpnext/            # ERPNext
-├── sites/                   # 사이트 데이터
-├── config/                  # 설정 파일
-├── logs/                    # 로그 파일
-├── docker-compose.yml       # Docker Compose 설정
-├── Dockerfile              # Docker 이미지 정의
-├── .env                    # 환경 변수
-├── setup.sh                # 초기 설정 스크립트
-└── start.sh                # 서버 시작 스크립트
-```
-
 ## ⚙️ 환경 변수 (.env)
 
 ```env
