@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  # MariaDB Database
+  mariadb:
+    image: mariadb:10.6
+    container_name: erpnext-mariadb
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --skip-character-set-client-handshake --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - erpnext-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis-cache:
+    image: redis:7-alpine
+    container_name: erpnext-redis-cache
+    volumes:
+      - redis-cache-data:/data
+    networks:
+      - erpnext-network
+
+  # Redis Queue
+  redis-queue:
+    image: redis:7-alpine
+    container_name: erpnext-redis-queue
+    volumes:
+      - redis-queue-data:/data
+    networks:
+      - erpnext-network
+
+  # Frappe/ERPNext Application
+  frappe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: erpnext-frappe
+    working_dir: /workspace
+    volumes:
+      # Mount source code for live development
+      - ./apps:/workspace/apps
+      - ./config:/workspace/config
+      - ./logs:/workspace/logs
+    ports:
+      - "8100:8000"  # Web interface
+      - "9000:9000"  # SocketIO
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - REDIS_CACHE=redis-cache:6379
+      - REDIS_QUEUE=redis-queue:6379
+      - SITE_NAME=${SITE_NAME}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+    networks:
+      - erpnext-network
+    stdin_open: true
+    tty: true
+    # 개발 모드: 수동 실행 (bash)
+    command: /bin/bash
+    # 프로덕션 모드 (자동 시작):
+    # command: >
+    #   bash -c "cd /workspace/sites && bench start"
+
+  # Frontend (Next.js) Service
+  frontend:
+    build:
+      context: ./apps/erpnext-frontend
+      dockerfile: Dockerfile
+      target: build  # 개발 모드용
+    container_name: erpnext-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://frappe:8000
+      - PORT=8300
+    volumes:
+      # 개발 시 소스 실시간 반영 (프로덕션에서는 주석 처리)
+      - ./apps/erpnext-frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "8300:8300"
+    depends_on:
+      - frappe
+    networks:
+      - erpnext-network
+    restart: unless-stopped
+    command: npm run dev
+
+networks:
+  erpnext-network:
+    driver: bridge
+
+volumes:
+  mariadb-data:
+  redis-cache-data:
+  redis-queue-data:

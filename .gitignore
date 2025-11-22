@@ -1,0 +1,37 @@
+# Environment variables
+.env
+
+# ERPNext site files
+sites/*/private/*
+!sites/*/private/backups/
+sites/*/logs/*
+sites/*/site_config.json
+sites/*/.venv
+
+# Python
+*.pyc
+__pycache__
+
+# Node.js
+node_modules
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode
+.idea
+
+# Logs
+logs/*.log
+
+# Bench
+frappe-bench/
+
+# Backup files (주석 해제 시 백업 파일 Git에서 제외)
+# database-backup/*.sql.gz
+# database-backup/*.tar
+
+# Backup logs
+backup.log
