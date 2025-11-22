@@ -1,8 +1,8 @@
-# DATCO ERP - ERPNext 15 기반 구매/판매 관리 시스템
+# ERPNext 15 기반 구매/판매 관리 시스템
 
 ERPNext 15를 기반으로 한 통합 ERP 시스템입니다. Docker 환경에서 실행되며, Next.js 기반의 커스텀 프론트엔드를 제공합니다.
 
-# DATCO ERP - ERPNext 추천 이유
+# ERPNext 추천 이유
 
 1. 기본 기능의 풀스택 통합 제공
 ERPNext는 회계, 구매/판매, 재고, CRM, 인사/급여, 프로젝트 관리 등 핵심 ERP 기능을 기본 모듈로 제공하여  별도의 추가 모듈 없이 바로 구축을 시작할 수 있습니다.
@@ -135,7 +135,7 @@ erpnext-dev/
 └── apps/
     ├── erpnext/         # ERPNext 백엔드
     ├── frappe/          # Frappe Framework
-    └── erpnext-frontend/  # React 프론트엔드 ⭐
+    └── erpnext-frontend/  # Next.js 프론트엔드 ⭐
         ├── src/
         │   ├── components/  # UI 컴포넌트
         │   ├── pages/       # 페이지 컴포넌트
