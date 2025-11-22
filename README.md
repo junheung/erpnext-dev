@@ -78,10 +78,15 @@ npm run dev
 1. **대시보드** - 실시간 통계 및 활동 타임라인
 <img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/578b0358-c323-4b8e-b703-d3aa34671ac3" />
 2. **공급자 관리** - 공급자 CRUD 및 필터링
+<img width="1439" height="698" alt="image" src="https://github.com/user-attachments/assets/66aae2da-146f-4688-ad59-ef3965365bc1" />
 3. **고객 관리** - 고객 정보 관리
+<img width="1439" height="694" alt="image" src="https://github.com/user-attachments/assets/6f42c4da-615d-439c-b28a-a574766cecdf" />
 4. **물품 등록** - 재고 물품 관리
+<img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/b2b3b4d8-8cb3-4fa9-8e3c-4a2c0fc684b8" />
 5. **구매 주문** - 구매 주문 생성/관리
+<img width="1439" height="694" alt="image" src="https://github.com/user-attachments/assets/10290043-4fe8-47ac-b9b7-939693eee001" />
 6. **판매 주문** - 판매 주문 생성/관리
+<img width="1437" height="695" alt="image" src="https://github.com/user-attachments/assets/3dc87f3d-105f-443c-8538-5f94453237f9" />
 
 ## 🛠️ 개발 가이드
 ### E2E 테스트 자동화 (Playwright)
