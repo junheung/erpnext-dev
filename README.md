@@ -1,8 +1,8 @@
-# ERPNext 15 기반 구매/판매 관리 시스템
+## ERPNext 15 기반 구매/판매 관리 시스템
 
 ERPNext 15를 기반으로 한 통합 ERP 시스템입니다. Docker 환경에서 실행되며, Next.js 기반의 커스텀 프론트엔드를 제공합니다.
 
-# ERPNext 사용 이유
+## ERPNext 사용 이유
 
 1. 기본 기능의 풀스택 통합 제공
 ERPNext는 회계, 구매/판매, 재고, CRM, 인사/급여, 프로젝트 관리 등 핵심 ERP 기능을 기본 모듈로 제공하여  별도의 추가 모듈 없이 바로 구축을 시작할 수 있습니다.
@@ -70,21 +70,26 @@ npm run dev
 ### 접속 정보
 
 - **백엔드 (ERPNext)**: http://localhost:8100
-- **프론트엔드**: http://localhost:83000
+- **프론트엔드**: http://localhost:8300
 - **관리자 계정**: Administrator / admin
 
 ## 🔑 주요 기능
 
 1. **대시보드** - 실시간 통계 및 활동 타임라인
 <img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/578b0358-c323-4b8e-b703-d3aa34671ac3" />
+
 2. **공급자 관리** - 공급자 CRUD 및 필터링
 <img width="1439" height="698" alt="image" src="https://github.com/user-attachments/assets/66aae2da-146f-4688-ad59-ef3965365bc1" />
+
 3. **고객 관리** - 고객 정보 관리
 <img width="1439" height="694" alt="image" src="https://github.com/user-attachments/assets/6f42c4da-615d-439c-b28a-a574766cecdf" />
+
 4. **물품 등록** - 재고 물품 관리
 <img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/b2b3b4d8-8cb3-4fa9-8e3c-4a2c0fc684b8" />
+
 5. **구매 주문** - 구매 주문 생성/관리
 <img width="1439" height="694" alt="image" src="https://github.com/user-attachments/assets/10290043-4fe8-47ac-b9b7-939693eee001" />
+
 6. **판매 주문** - 판매 주문 생성/관리
 <img width="1437" height="695" alt="image" src="https://github.com/user-attachments/assets/3dc87f3d-105f-443c-8538-5f94453237f9" />
 
