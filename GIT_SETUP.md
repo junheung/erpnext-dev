@@ -33,7 +33,7 @@ git add .
 git status
 
 # 초기 커밋
-git commit -m "Initial commit: ERPNext project with database backup"
+git commit -m "Initial commit: ERPNext project"
 ```
 
 ### Step 3: GitHub에 푸시
