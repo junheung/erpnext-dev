@@ -76,6 +76,7 @@ npm run dev
 ## 🔑 주요 기능
 
 1. **대시보드** - 실시간 통계 및 활동 타임라인
+<img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/578b0358-c323-4b8e-b703-d3aa34671ac3" />
 2. **공급자 관리** - 공급자 CRUD 및 필터링
 3. **고객 관리** - 고객 정보 관리
 4. **물품 등록** - 재고 물품 관리
