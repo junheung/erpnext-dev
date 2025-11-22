@@ -54,14 +54,10 @@ bench new-site erpnext.local --db-name datco_db --db-password admin --admin-pass
 bench --site erpnext.local install-app erpnext
 bench use erpnext.local
 
-# 3. CORS 설정 (sites/erpnext.local/site_config.json에 추가)
-# allow_cors: "*"
-# ignore_csrf: 1
-
-# 4. 백엔드 서버 시작
+# 3. 백엔드 서버 시작
 bench start
 
-# 5. 프론트엔드 실행 (새 터미널)
+# 4. 프론트엔드 실행 (새 터미널)
 cd apps/erpnext-frontend
 npm install
 npm run dev
