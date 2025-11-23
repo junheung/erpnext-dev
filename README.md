@@ -43,21 +43,43 @@ Python + JavaScript 기반의 Frappe Framework 위에서 동작하며 메타데�
 
 ### 초기 설정 (요약)
 
+새 사용자가 소스를 받아서 바로 동일한 개발환경을 만들 때 가장 빠르고 간편한 방법:
+
 ```bash
-# 1. Docker 컨테이너 시작
+# 1. .env 파일 확인 및 수정 (선택사항)
+# .env 파일이 이미 제공되어 있습니다. 
+# 사이트명, 비밀번호 등을 변경하려면 .env 파일을 수정하세요.
+
+# 2. 모든 환경을 한 번에 자동 설정 (권장)
+chmod +x first-setup.sh
+./first-setup.sh
+```
+
+**또는 수동 설정:**
+
+```bash
+# 1. Docker 이미지 빌드 (최초 1회만)
+docker-compose build
+
+# 2. Docker 컨테이너 시작
 docker-compose up -d
 
-# 2. 컨테이너 접속 및 사이트 생성 (최초 1회만)
-docker exec -it erpnext-frappe bash
-cd /workspace/frappe-bench
-bench new-site erpnext.local --db-name datco_db --db-password admin --admin-password admin --no-mariadb-socket
-bench --site erpnext.local install-app erpnext
-bench use erpnext.local
+# 3. MariaDB 준비 대기
+sleep 15
 
-# 3. 백엔드 서버 시작
-bench start
+# 4. Frappe 벤치 초기화
+docker-compose exec frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
 
-# 4. 프론트엔드 실행 (새 터미널)
+# 5. 사이트 생성 및 ERPNext 설치
+docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench new-site erpnext.local --db-root-username root --mariadb-root-password admin --admin-password admin --db-host mariadb --db-port 3306"
+docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
+docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local install-app erpnext"
+docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench use erpnext.local"
+
+# 6. 백엔드 서버 시작
+docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench start"
+
+# 7. 프론트엔드 실행 (새 터미널)
 cd apps/erpnext-frontend
 npm install
 npm run dev

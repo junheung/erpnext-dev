@@ -58,20 +58,11 @@ RUN useradd -ms /bin/bash frappe
 # Set working directory
 WORKDIR /workspace
 
-# Copy apps directory
-COPY --chown=frappe:frappe apps /workspace/apps
-
 # Install bench
 RUN pip install --no-cache-dir frappe-bench
 
-# Install Python dependencies for frappe
-RUN cd /workspace/apps/frappe && pip install --no-cache-dir -e .
-
-# Install Python dependencies for erpnext
-RUN cd /workspace/apps/erpnext && pip install --no-cache-dir -e .
-
-# Create sites directory and set permissions
-RUN mkdir -p /workspace/sites && \
+# Create workspace directories and set permissions
+RUN mkdir -p /workspace/apps /workspace/sites && \
     chown -R frappe:frappe /workspace
 
 # Switch to frappe user
