@@ -53,31 +53,82 @@ chmod +x first-setup.sh
 ./first-setup.sh
 ```
 
+#### Windows (명령 프롬프트)
+```cmd
+REM 1. .env 파일 확인 및 수정 (선택사항)
+REM .env 파일이 이미 제공되어 있습니다. 
+REM 사이트명, 비밀번호 등을 변경하려면 .env 파일을 수정하세요.
+
+REM 2. 모든 환경을 한 번에 자동 설정 (권장)
+first-setup.cmd
+```
+
+
 **또는 수동 설정:**
 
 ```bash
-# 1. Docker 이미지 빌드 (최초 1회만)
-docker-compose build
+# 1. 기존 컨테이너 및 볼륨 정리 (선택사항)
+docker-compose down -v
 
 # 2. Docker 컨테이너 시작
 docker-compose up -d
 
-# 3. MariaDB 준비 대기
-sleep 15
+# 3. MariaDB 상태 확인 (최대 60초 대기)
+for i in {1..12}; do
+    if docker-compose exec -T mariadb mysqladmin ping -h localhost -u root -padmin --silent >/dev/null 2>&1; then
+        echo "✅ MariaDB가 준비되었습니다!"
+        break
+    fi
+    echo "⏳ MariaDB 대기 중... ($i/12)"
+    sleep 5
+done
 
-# 4. Frappe 벤치 초기화
-docker-compose exec frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
+# 4. 로그 디렉토리 권한 설정
+docker-compose exec -T --user root frappe bash -c "mkdir -p /workspace/logs && chown -R frappe:frappe /workspace/logs && chmod 755 /workspace/logs"
+docker-compose exec -T --user root frappe bash -c "chown -R frappe:frappe /workspace"
 
-# 5. 사이트 생성 및 ERPNext 설치
-docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench new-site erpnext.local --db-root-username root --mariadb-root-password admin --admin-password admin --db-host mariadb --db-port 3306"
-docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
-docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local install-app erpnext"
-docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench use erpnext.local"
+# 5. Frappe 벤치 초기화
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
 
-# 6. 백엔드 서버 시작
-docker-compose exec frappe bash -c "cd /workspace/frappe-bench && bench start"
+# 6. common_site_config.json 생성
+docker-compose exec -T --user frappe frappe bash -c "cat > /workspace/frappe-bench/sites/common_site_config.json" << 'EOF'
+{
+  "background_workers": 1,
+  "file_watcher_port": 6787,
+  "frappe_user": "frappe",
+  "gunicorn_workers": 4,
+  "live_reload": true,
+  "rebase_on_pull": false,
+  "redis_cache": "redis://redis-cache:6379",
+  "redis_queue": "redis://redis-queue:6379",
+  "restart_supervisor_on_update": false,
+  "restart_systemd_on_update": false,
+  "serve_default_site": true,
+  "shallow_clone": true,
+  "socketio_port": 9000,
+  "webserver_port": 8000,
+  "developer_mode": 1
+}
+EOF
 
-# 7. 프론트엔드 실행 (새 터미널)
+# 7. 사이트 생성
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench new-site erpnext.local --db-root-username root --mariadb-root-password admin --admin-password admin --db-host mariadb --db-port 3306"
+
+# 8. ERPNext 앱 설치
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local install-app erpnext"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench use erpnext.local"
+
+# 9. 개발 환경 설정
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local set-config ignore_csrf 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local set-config developer_mode 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local set-config allow_cors '*'"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site erpnext.local set-config disable_website_cache 1"
+
+# 10. 백엔드 서버 시작
+docker-compose exec -d --user frappe frappe bash -c "cd /workspace/frappe-bench && bench start"
+
+# 11. 프론트엔드 실행 (새 터미널)
 cd apps/erpnext-frontend
 npm install
 npm run dev
@@ -148,7 +199,6 @@ bench start
 ```
 erpnext-dev/
 ├── README.md              # 이 파일
-├── SETUP_GUIDE.md        # 완전한 설정 가이드 ⭐
 ├── backup.sh             # 자동 백업 스크립트
 ├── database-backup/      # DB 백업 저장소
 ├── docker-compose.yml    # Docker 설정
