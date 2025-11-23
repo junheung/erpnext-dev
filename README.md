@@ -189,8 +189,6 @@ bench start
 ```
 erpnext-dev/
 ├── README.md              # 이 파일
-├── backup.sh             # 자동 백업 스크립트
-├── database-backup/      # DB 백업 저장소
 ├── docker-compose.yml    # Docker 설정
 ├── Dockerfile           # Docker 이미지
 └── apps/
