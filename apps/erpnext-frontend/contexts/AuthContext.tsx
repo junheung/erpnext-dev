@@ -79,20 +79,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Frappe login requires application/x-www-form-urlencoded with cmd=login
-    const formData = new URLSearchParams();
-    formData.append('cmd', 'login');
-    formData.append('usr', email);
-    formData.append('pwd', password);
-
+    // ERPNext JSON login
     const response = await fetch('/api/method/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
       credentials: 'include',
-      body: formData.toString(),
+      body: JSON.stringify({
+        usr: email,
+        pwd: password
+      }),
     });
 
     if (!response.ok) {

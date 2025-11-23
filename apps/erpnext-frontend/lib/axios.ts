@@ -11,13 +11,28 @@ const axiosInstance = axios.create({
 
 // CSRF 토큰 가져오기
 function getCSRFToken(): string {
+  // ERPNext에서 사용하는 방식들을 시도
   const cookies = document.cookie.split(';');
+  
+  // 1. csrf_token 쿠키 확인
   for (let cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
     if (name === 'csrf_token') {
       return decodeURIComponent(value);
     }
   }
+  
+  // 2. window.csrf_token 확인 (ERPNext에서 자주 사용)
+  if (typeof window !== 'undefined' && (window as any).csrf_token) {
+    return (window as any).csrf_token;
+  }
+  
+  // 3. 메타 태그에서 확인
+  const metaTag = document.querySelector('meta[name="csrf-token"]');
+  if (metaTag) {
+    return metaTag.getAttribute('content') || '';
+  }
+  
   return '';
 }
 
@@ -25,9 +40,16 @@ function getCSRFToken(): string {
 axiosInstance.interceptors.request.use(
   (config) => {
     const csrfToken = getCSRFToken();
-    if (csrfToken && config.method !== 'get') {
+    if (csrfToken) {
+      // ERPNext는 모든 요청에 CSRF 토큰이 필요할 수 있음
       config.headers['X-Frappe-CSRF-Token'] = csrfToken;
+      // 또는 다른 헤더명 시도
+      config.headers['X-CSRF-Token'] = csrfToken;
     }
+    
+    // ERPNext API 호출을 위한 추가 헤더
+    config.headers['Accept'] = 'application/json';
+    
     return config;
   },
   (error) => {
