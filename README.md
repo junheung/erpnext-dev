@@ -36,8 +36,6 @@ Python + JavaScript 기반의 Frappe Framework 위에서 동작하며 메타데�
 
 ### 전체 설치 및 설정 가이드
 
-**자세한 설정 방법은 [SETUP_GUIDE.md](./SETUP_GUIDE.md) 파일을 참조하세요.**
-
 이 가이드에는 다음 내용이 포함되어 있습니다:
 - ✅ 개발 워크플로우
 
@@ -169,8 +167,6 @@ erpnext-dev/
 
 ## 🔧 문제 해결
 
-일반적인 문제와 해결 방법은 [SETUP_GUIDE.md - 문제 해결](./SETUP_GUIDE.md#문제-해결) 섹션을 참조하세요.
-
 ### 주요 문제 해결
 
 **컨테이너가 시작되지 않는 경우:**
@@ -192,7 +188,6 @@ kill -9 <PID>
 
 ## 📚 문서
 
-- **완전한 설정 가이드**: [SETUP_GUIDE.md](./SETUP_GUIDE.md)
 - [Frappe Framework 문서](https://frappeframework.com/docs)
 - [ERPNext 문서](https://docs.erpnext.com/)
 
@@ -214,9 +209,6 @@ git commit -m "feat: 새 기능 추가"
 내부용 프로젝트. 외부 배포 금지.
 
 ---
-
-**도움이 필요하신가요?**  
-자세한 내용은 [SETUP_GUIDE.md](./SETUP_GUIDE.md)를 참조하거나 개발팀에 문의하세요.
 
 ## ⚙️ 환경 변수 (.env)
 

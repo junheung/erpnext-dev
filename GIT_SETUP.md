@@ -369,7 +369,6 @@ git push origin main
 - [ ] 원격 저장소 추가 (`git remote add origin`)
 - [ ] GitHub에 푸시 (`git push -u origin main`)
 - [ ] 팀원 초대
-- [ ] README.md 및 SETUP_GUIDE.md 확인
 - [ ] 백업 파일 포함 여부 결정 (.gitignore 설정)
 
 ### 새로운 팀원
