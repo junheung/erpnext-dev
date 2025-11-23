@@ -18,13 +18,58 @@ echo "=========================================="
 echo "ERPNext First Setup"
 echo "=========================================="
 
+# Docker 상태 확인
+echo "🔍 Docker 상태 확인 중..."
+
+# Docker 데몬이 실행 중인지 확인
+if ! docker info >/dev/null 2>&1; then
+    echo "❌ Docker가 실행되지 않았습니다!"
+    echo ""
+    echo "다음 중 하나를 실행해주세요:"
+    echo "  - macOS: Docker Desktop 실행 (open -a Docker)"
+    echo "  - Linux: sudo systemctl start docker"
+    echo "  - Windows: Docker Desktop 실행"
+    echo ""
+    exit 1
+fi
+
+# Docker Compose 설치 확인
+if ! docker compose version >/dev/null 2>&1; then
+    echo "❌ Docker Compose가 설치되지 않았습니다!"
+    echo "Docker Compose를 설치해주세요: https://docs.docker.com/compose/install/"
+    exit 1
+fi
+
+echo "✅ Docker가 정상적으로 실행 중입니다."
+echo ""
+
+echo "🧹 기존 컨테이너 및 볼륨 정리 중..."
 docker-compose down -v
+
+echo "🚀 새 환경 구축 시작..."
 docker-compose up -d
 
-echo "Waiting for MariaDB to be ready..."
-sleep 15
+echo "⏳ MariaDB 초기화 대기 중..."
 
-echo "Initializing bench (downloading Frappe from GitHub)..."
+# MariaDB 상태 확인 (최대 60초 대기)
+echo "🔍 MariaDB 연결 상태 확인..."
+for i in {1..12}; do
+    if docker-compose exec -T mariadb mysqladmin ping -h localhost -u root -p${DB_ROOT_PASSWORD:-admin} --silent >/dev/null 2>&1; then
+        echo "✅ MariaDB가 준비되었습니다!"
+        break
+    fi
+    echo "⏳ MariaDB 대기 중... ($i/12)"
+    sleep 5
+done
+
+# 마지막으로 한 번 더 확인
+if ! docker-compose exec -T mariadb mysqladmin ping -h localhost -u root -p${DB_ROOT_PASSWORD:-admin} --silent >/dev/null 2>&1; then
+    echo "❌ MariaDB 연결에 실패했습니다. 로그를 확인해주세요:"
+    echo "   docker-compose logs mariadb"
+    exit 1
+fi
+
+echo "🔧 Frappe 벤치 초기화 중..."
 docker-compose exec -T frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
 
 echo "Creating common_site_config.json..."
