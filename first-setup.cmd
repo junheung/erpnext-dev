@@ -204,7 +204,14 @@ if errorlevel 1 (
     echo ✅ 기본 사이트가 설정되었습니다.
 )
 
-echo 🚀 ERPNext 백엔드 서버 시작 중...
+echo � 개발 환경 설정 중...
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site %SITE_NAME% set-config ignore_csrf 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site %SITE_NAME% set-config developer_mode 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site %SITE_NAME% set-config allow_cors '*'"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site %SITE_NAME% set-config disable_website_cache 1"
+echo ✅ 개발 환경 설정이 완료되었습니다.
+
+echo �🚀 ERPNext 백엔드 서버 시작 중...
 start /b docker-compose exec -d --user frappe frappe bash -c "cd /workspace/frappe-bench && bench start"
 echo ✅ 백엔드 서버가 시작되었습니다.
 

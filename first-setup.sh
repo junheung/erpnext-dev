@@ -114,7 +114,13 @@ docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench 
 echo "Setting default site..."
 docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench use ${SITE_NAME:-erpnext.local}"
 
-echo "🚀 Starting ERPNext backend server..."
+echo "� Configuring development settings..."
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} set-config ignore_csrf 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} set-config developer_mode 1"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} set-config allow_cors '*'"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} set-config disable_website_cache 1"
+
+echo "�🚀 Starting ERPNext backend server..."
 docker-compose exec -d --user frappe frappe bash -c "cd /workspace/frappe-bench && bench start"
 
 echo "⏳ Waiting for ERPNext server to start..."

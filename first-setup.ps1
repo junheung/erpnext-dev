@@ -239,7 +239,18 @@ try {
     Write-Warning "기본 사이트 설정 중 오류가 발생했습니다."
 }
 
-Write-Host "🚀 ERPNext 백엔드 서버 시작 중..." -ForegroundColor Blue
+Write-Host "� 개발 환경 설정 중..." -ForegroundColor Blue
+try {
+    docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site $env:SITE_NAME set-config ignore_csrf 1"
+    docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site $env:SITE_NAME set-config developer_mode 1"
+    docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site $env:SITE_NAME set-config allow_cors '*'"
+    docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site $env:SITE_NAME set-config disable_website_cache 1"
+    Write-Host "✅ 개발 환경 설정이 완료되었습니다." -ForegroundColor Green
+} catch {
+    Write-Warning "개발 환경 설정 중 오류가 발생했습니다."
+}
+
+Write-Host "�🚀 ERPNext 백엔드 서버 시작 중..." -ForegroundColor Blue
 try {
     # PowerShell에서 백그라운드 작업 시작
     Start-Process docker-compose -ArgumentList "exec", "-d", "--user", "frappe", "frappe", "bash", "-c", "cd /workspace/frappe-bench && bench start" -NoNewWindow
