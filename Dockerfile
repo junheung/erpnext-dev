@@ -39,10 +39,15 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     # Yarn
     && npm install -g yarn \
-    # wkhtmltopdf
-    && wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
-    && apt-get install -y ./wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
-    && rm wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
+    # wkhtmltopdf (multi-arch)
+    && ARCH=$(dpkg --print-architecture) \
+    && if [ "$ARCH" = "amd64" ]; then \
+        wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb && \
+        apt-get install -y ./wkhtmltox_0.12.6.1-2.bullseye_amd64.deb && \
+        rm wkhtmltox_0.12.6.1-2.bullseye_amd64.deb; \
+    else \
+        apt-get install -y wkhtmltopdf; \
+    fi \
     # Cleanup
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
