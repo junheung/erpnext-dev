@@ -70,10 +70,19 @@ if ! docker-compose exec -T mariadb mysqladmin ping -h localhost -u root -p${DB_
 fi
 
 echo "🔧 Frappe 벤치 초기화 중..."
-docker-compose exec -T frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
+
+# 로그 디렉토리 권한 설정 (root로 실행 후 frappe 소유권 설정)
+echo "📁 로그 디렉토리 권한 설정 중..."
+docker-compose exec -T --user root frappe bash -c "mkdir -p /workspace/logs && chown -R frappe:frappe /workspace/logs && chmod 755 /workspace/logs"
+
+# 추가적으로 workspace 전체 권한도 확인
+docker-compose exec -T --user root frappe bash -c "chown -R frappe:frappe /workspace"
+
+# Frappe 사용자로 벤치 초기화 실행
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
 
 echo "Creating common_site_config.json..."
-docker-compose exec -T frappe bash -c "cat > /workspace/frappe-bench/sites/common_site_config.json" << 'EOF'
+docker-compose exec -T --user frappe frappe bash -c "cat > /workspace/frappe-bench/sites/common_site_config.json" << 'EOF'
 {
   "background_workers": 1,
   "file_watcher_port": 6787,
@@ -94,19 +103,19 @@ docker-compose exec -T frappe bash -c "cat > /workspace/frappe-bench/sites/commo
 EOF
 
 echo "Creating new site (using SITE_NAME from .env: ${SITE_NAME:-erpnext.local})..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench new-site ${SITE_NAME:-erpnext.local} --db-root-username root --mariadb-root-password ${DB_ROOT_PASSWORD:-admin} --admin-password ${ADMIN_PASSWORD:-admin} --db-host mariadb --db-port 3306"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench new-site ${SITE_NAME:-erpnext.local} --db-root-username root --mariadb-root-password ${DB_ROOT_PASSWORD:-admin} --admin-password ${ADMIN_PASSWORD:-admin} --db-host mariadb --db-port 3306"
 
 echo "Getting ERPNext app (downloading from GitHub)..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
 
 echo "Installing ERPNext to site..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} install-app erpnext"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} install-app erpnext"
 
 echo "Setting default site..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench use ${SITE_NAME:-erpnext.local}"
+docker-compose exec -T --user frappe frappe bash -c "cd /workspace/frappe-bench && bench use ${SITE_NAME:-erpnext.local}"
 
 echo "🚀 Starting ERPNext backend server..."
-docker-compose exec -d frappe bash -c "cd /workspace/frappe-bench && bench start"
+docker-compose exec -d --user frappe frappe bash -c "cd /workspace/frappe-bench && bench start"
 
 echo "⏳ Waiting for ERPNext server to start..."
 sleep 10
