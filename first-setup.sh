@@ -9,18 +9,23 @@
 
 set -e
 
+# .env 파일에서 환경 변수 로드
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
 echo "=========================================="
-echo "ERPNext first Setup"
+echo "ERPNext First Setup"
 echo "=========================================="
 
 docker-compose down -v
 docker-compose up -d
 
-echo "Waiting for containers to be ready..."
-sleep 10
+echo "Waiting for MariaDB to be ready..."
+sleep 15
 
-echo "Initializing bench..."
-docker-compose exec -T frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets --frappe-path /workspace/apps/frappe frappe-bench"
+echo "Initializing bench (downloading Frappe from GitHub)..."
+docker-compose exec -T frappe bash -c "cd /workspace && bench init --skip-redis-config-generation --no-backups --skip-assets frappe-bench"
 
 echo "Creating common_site_config.json..."
 docker-compose exec -T frappe bash -c "cat > /workspace/frappe-bench/sites/common_site_config.json" << 'EOF'
@@ -43,19 +48,24 @@ docker-compose exec -T frappe bash -c "cat > /workspace/frappe-bench/sites/commo
 }
 EOF
 
-echo "Creating new site..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench new-site localhost --mariadb-root-password admin --admin-password admin --db-host mariadb --db-port 3306"
+echo "Creating new site (using SITE_NAME from .env: ${SITE_NAME:-erpnext.local})..."
+docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench new-site ${SITE_NAME:-erpnext.local} --db-root-username root --mariadb-root-password ${DB_ROOT_PASSWORD:-admin} --admin-password ${ADMIN_PASSWORD:-admin} --db-host mariadb --db-port 3306"
 
-echo "Getting ERPNext app..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext /workspace/apps/erpnext"
+echo "Getting ERPNext app (downloading from GitHub)..."
+docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench get-app erpnext"
 
-echo "Installing ERPNext..."
-docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench --site localhost install-app erpnext"
+echo "Installing ERPNext to site..."
+docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench --site ${SITE_NAME:-erpnext.local} install-app erpnext"
+
+echo "Setting default site..."
+docker-compose exec -T frappe bash -c "cd /workspace/frappe-bench && bench use ${SITE_NAME:-erpnext.local}"
 
 echo ""
 echo "=========================================="
 echo "✅ Setup Complete!"
 echo "=========================================="
+echo ""
+echo "Site created: ${SITE_NAME:-erpnext.local}"
 echo ""
 echo "To start the server:"
 echo "  docker-compose exec frappe bash"
@@ -63,5 +73,10 @@ echo "  cd /workspace/frappe-bench"
 echo "  bench start"
 echo ""
 echo "Then access: http://localhost:8100"
-echo "Login: Administrator / admin"
+echo "Login: Administrator / ${ADMIN_PASSWORD:-admin}"
+echo ""
+echo "Note: If you encounter database connection errors,"
+echo "      the database users are auto-created by bench."
+echo "      Just restart the frappe container:"
+echo "      docker-compose restart frappe"
 echo ""
