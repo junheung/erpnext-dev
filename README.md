@@ -87,7 +87,7 @@ npm run dev
 
 ### 접속 정보
 
-- **백엔드 (ERPNext)**: http://localhost:8100
+- **백엔드/프론트엔드(ERPNext)**: http://localhost:8100
 - **프론트엔드**: http://localhost:8300
 - **관리자 계정**: Administrator / admin
 
@@ -144,12 +144,6 @@ cd /workspace/frappe-bench
 
 # 개발 서버 시작
 bench start
-
-# 마이그레이션
-bench --site erpnext.local migrate
-
-# 콘솔 접속
-bench --site erpnext.local console
 ```
 
 
@@ -201,7 +195,6 @@ kill -9 <PID>
 - **완전한 설정 가이드**: [SETUP_GUIDE.md](./SETUP_GUIDE.md)
 - [Frappe Framework 문서](https://frappeframework.com/docs)
 - [ERPNext 문서](https://docs.erpnext.com/)
-- [React 문서](https://react.dev/)
 
 ## 🤝 Git 워크플로우
 
