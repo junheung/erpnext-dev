@@ -157,8 +157,11 @@ ERPNext 백엔드: http://localhost:8100
 
 처음 로그인을 하면 아래와 같이 Welcome 화면이 나옵니다.
 <img width="825" height="529" alt="image" src="https://github.com/user-attachments/assets/d902e860-9e47-46ab-ab4a-646e37f73ac1" />
+
 <img width="406" height="406" alt="image" src="https://github.com/user-attachments/assets/478b5562-754f-41b9-a094-ff1a30f13d21" />
-<img width="412" height="499" alt="image" src="https://github.com/user-attachments/assets/27d57522-a0c0-45f9-b364-0583576699e4" />
+
+<img width="413" height="490" alt="image" src="https://github.com/user-attachments/assets/3ba022e6-4164-4600-90b7-21aa69d5647b" />
+
 
 위와 같이 셋팅이 끝나면 아래와 같은 화면이 나옵니다.
 <img width="856" height="568" alt="image" src="https://github.com/user-attachments/assets/a93f1b9c-5535-4d05-904d-dceeeadc42c6" />
