@@ -150,6 +150,20 @@ npm run dev
 
 ## 🔑 주요 기능
 
+ERPNext 백엔드: http://localhost:8100
+로 접속하고
+에서 Administrator / admin 으로 로그인을 해 주세요
+<img width="800" height="446" alt="image" src="https://github.com/user-attachments/assets/2226b5b4-1fd0-4ad4-8e58-c5f90afd297f" />
+
+처음 로그인을 하면 아래와 같이 Welcome 화면이 나옵니다.
+<img width="825" height="529" alt="image" src="https://github.com/user-attachments/assets/d902e860-9e47-46ab-ab4a-646e37f73ac1" />
+<img width="406" height="406" alt="image" src="https://github.com/user-attachments/assets/478b5562-754f-41b9-a094-ff1a30f13d21" />
+<img width="412" height="499" alt="image" src="https://github.com/user-attachments/assets/27d57522-a0c0-45f9-b364-0583576699e4" />
+
+위와 같이 셋팅이 끝나면 아래와 같은 화면이 나옵니다.
+<img width="856" height="568" alt="image" src="https://github.com/user-attachments/assets/a93f1b9c-5535-4d05-904d-dceeeadc42c6" />
+
+
 1. **대시보드** - 실시간 통계 및 활동 타임라인
 <img width="1440" height="694" alt="image" src="https://github.com/user-attachments/assets/578b0358-c323-4b8e-b703-d3aa34671ac3" />
 
