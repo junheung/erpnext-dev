@@ -23,9 +23,11 @@ BOM 기반 제조, 재고, 원가가 유기적으로 연결된 구조로 설계�
 
 <img width="944" height="393" alt="image" src="https://github.com/user-attachments/assets/624d55b9-ecc2-4d0c-a215-9a507fbcc058" />
 
+
 회계 모듈의 기본도 잘 구현 되어 있습니다.
 
 <img width="474" height="415" alt="image" src="https://github.com/user-attachments/assets/fa535aa6-2ae6-49d8-b7bc-85b42bd18b4a" />
+
 
 프레임워크 단에서 사용자 관리, 데이터 관리(백업/Import/Export), 스케줄러 관리, 알림 관리, 업무 관리 등의 관리가 아주 잘 되어 있습니다.
 
